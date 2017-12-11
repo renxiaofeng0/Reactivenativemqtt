@@ -20,13 +20,13 @@ public class MQTTService {
     //消息服务器的URL
     public static final String BROKER_URL = "tcp://192.168.7.19:1883";
     //客户端ID，用来标识一个客户，可以根据不同的策略来生成
-    public String clientId = "xuym";
+    public static String clientId = "xuym";
     //订阅的主题名
-    public String topic = "test123/PTP";
+    public static String topic = "test123/PTP";
     //mqtt客户端类
-    private MqttClient mqttClient;
+    private static MqttClient mqttClient;
     //mqtt连接配置类
-    private MqttConnectOptions options;
+    private static MqttConnectOptions options;
 
     private String userName = "admin";
     private String passWord = "admin";
@@ -89,7 +89,7 @@ public class MQTTService {
 
     }
 
-    public void onDestroy() {
+    public static void onDestroy() {
         try {
             mqttClient.disconnect(0);
         } catch (MqttException e) {
