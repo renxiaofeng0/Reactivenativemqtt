@@ -4,13 +4,17 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 import org.eclipse.paho.client.mqttv3.internal.MemoryPersistence;
+
+import static com.fwpt.reactivenativemqtt.PushCallback.sendEvent;
 
 /**
  * Created by Administrator on 2017-12-08.
@@ -82,6 +86,11 @@ public class MQTTService {
             String[] topic1 = {this.topic};
             mqttClient.subscribe(topic1, Qos);
 
+            //通知前端
+            WritableMap event = Arguments.createMap();
+            event.putString("message","已链接上消息服务器，监听主题："+this.topic);
+            sendEvent(myContext, "MqttMsg",event);
+
         } catch (MqttException e) {
             Toast.makeText(myContext, "Something went wrong!" + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
@@ -92,6 +101,10 @@ public class MQTTService {
     public static void onDestroy() {
         try {
             mqttClient.disconnect(0);
+            //通知前端
+            WritableMap event = Arguments.createMap();
+            event.putString("message","已与消息服务器断开");
+            sendEvent(myContext, "MqttMsg",event);
         } catch (MqttException e) {
             Toast.makeText(myContext, "Something went wrong!" + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
