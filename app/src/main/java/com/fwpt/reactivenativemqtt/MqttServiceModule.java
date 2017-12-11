@@ -52,6 +52,12 @@ public class MqttServiceModule extends ReactContextBaseJavaModule {
         MQTTService.onDestroy();
     }
 
+    @ReactMethod
+    public Boolean checkConnected()
+    {
+        return MQTTService.checkConnected();
+    }
+
     /**
      * 执行吐司(含回调函数)
      * @param tag
