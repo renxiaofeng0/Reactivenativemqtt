@@ -53,7 +53,7 @@ public class PushCallback implements MqttCallback {
     /*原生模块可以在没有被调用的情况下往JavaScript发送事件通知。
     最简单的办法就是通过RCTDeviceEventEmitter，
     这可以通过ReactContext来获得对应的引用，像这样：*/
-    public static void sendEvent(ReactContext reactContext, String eventName, WritableMap paramss)
+    public void sendEvent(ReactContext reactContext, String eventName, WritableMap paramss)
     {
         System.out.println("reactContext="+reactContext);
 

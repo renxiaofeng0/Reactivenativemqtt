@@ -7,14 +7,13 @@ import android.widget.Toast;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 import org.eclipse.paho.client.mqttv3.internal.MemoryPersistence;
-
-import static com.fwpt.reactivenativemqtt.PushCallback.sendEvent;
 
 /**
  * Created by Administrator on 2017-12-08.
@@ -109,5 +108,18 @@ public class MQTTService {
             Toast.makeText(myContext, "Something went wrong!" + e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
+    }
+
+    /*原生模块可以在没有被调用的情况下往JavaScript发送事件通知。
+    最简单的办法就是通过RCTDeviceEventEmitter，
+    这可以通过ReactContext来获得对应的引用，像这样：*/
+    public static void sendEvent(ReactContext reactContext, String eventName, WritableMap paramss)
+    {
+        System.out.println("reactContext="+reactContext);
+
+        reactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, paramss);
+
     }
 }
