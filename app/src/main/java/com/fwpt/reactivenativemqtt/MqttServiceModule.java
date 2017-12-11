@@ -47,7 +47,7 @@ public class MqttServiceModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void disconnect(String userId)
+    public void disconnect()
     {
         MQTTService.onDestroy();
     }
