@@ -1,0 +1,28 @@
+{
+  "name": "react-native-activemq",
+  "version": "1.0.0",
+  "description": "react-native,activemq,android,ios",
+  "main": "activemq.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/longlongago2/react-native-activemq.git"
+  },
+  "keywords": [
+    "react-naitve",
+    "activemq",
+    "android",
+    "ios"
+  ],
+  "author": "zhanggl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/longlongago2/react-native-activemq/issues"
+  },
+  "homepage": "https://github.com/longlongago2/react-native-activemq#readme",
+  "dependencies": {
+    "react-native": "^0.50.3"
+  }
+}
