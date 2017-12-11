@@ -39,7 +39,8 @@ public class PushCallback implements MqttCallback {
             throws Exception {
         // 有新消息到达时的回调方法
         WritableMap event = Arguments.createMap();
-        sendEvent(context, message.toString(),event);
+        event.putString("message",message.toString());
+        sendEvent(context, "mqttMsg",event);
 
     }
 
