@@ -1,4 +1,4 @@
-package com.fwpt.reactivenativemqtt;
+﻿package com.fwpt.reactivenativemqtt;
 
 import android.content.Intent;
 import android.os.IBinder;
@@ -91,7 +91,7 @@ public class MQTTService {
 
                     //通知前端
                     WritableMap event = Arguments.createMap();
-                    event.putString("message", "{已链接上消息服务器，监听主题：" + this.topic+"}");
+                    event.putString("message", "{\"context\":\"已链接上消息服务器，监听主题：" + this.topic+"\"}");
                     sendEvent(myContext, "MqttMsg", event);
                 } else {
                     mqttClient = null;
@@ -110,7 +110,7 @@ public class MQTTService {
                 mqttClient.disconnect(0);
                 //通知前端
                 WritableMap event = Arguments.createMap();
-                event.putString("message", "{已与消息服务器断开}");
+                event.putString("message", "{\"context\":\"已与消息服务器断开}\"");
                 sendEvent(myContext, "MqttMsg", event);
             }
         } catch (MqttException e) {
