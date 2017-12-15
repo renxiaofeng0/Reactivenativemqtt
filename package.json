@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/longlongago2/react-native-activemq.git"
+    "url": "git+https://github.com/renxiaofeng0/Reactivenativemqtt.git"
   },
   "keywords": [
     "react-naitve",
@@ -19,9 +19,9 @@
   "author": "zhanggl",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/longlongago2/react-native-activemq/issues"
+    "url": "https://github.com/renxiaofeng0/Reactivenativemqtt.git"
   },
-  "homepage": "https://github.com/longlongago2/react-native-activemq#readme",
+  "homepage": "https://github.com/renxiaofeng0/Reactivenativemqtt#readme",
   "dependencies": {
     "react-native": "^0.50.3"
   }
