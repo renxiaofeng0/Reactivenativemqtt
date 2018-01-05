@@ -15,6 +15,10 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 import org.eclipse.paho.client.mqttv3.internal.MemoryPersistence;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by Administrator on 2017-12-08.
  */
@@ -36,6 +40,8 @@ public class MQTTService {
 
     //定义上下文对象
     public static ReactContext myContext;
+
+    private static ScheduledExecutorService scheduler;
 
 //    public MQTTService(ReactContext myContext, String topicNames, String userId)
 //    {
@@ -73,7 +79,8 @@ public class MQTTService {
                     // 设置超时时间 单位为秒
                     options.setConnectionTimeout(10);
                     // 设置会话心跳时间 单位为秒 服务器会每隔1.5*20秒的时间向客户端发送个消息判断客户端是否在线，但这个方法并没有重连的机制
-                    options.setKeepAliveInterval(20);
+                    options.setKeepAliveInterval(10);
+                    
                     // 设置回调  回调类的说明看后面
                     mqttClient.setCallback(new PushCallback(myContext));
                     MqttTopic mqttTopic = mqttClient.getTopic(topic);
@@ -90,6 +97,8 @@ public class MQTTService {
                     int[] Qos = {1};
                     String[] topic1 = {topic};
                     mqttClient.subscribe(topic1, Qos);
+                    //每隔10秒，心跳重连
+                    startReconnect();
 
                     //通知前端
                     WritableMap event = Arguments.createMap();
@@ -137,5 +146,32 @@ public class MQTTService {
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                 .emit(eventName, paramss);
 
+    }
+
+    public static void startReconnect() {
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(new Runnable() {
+
+            @Override
+            public void run() {
+                if(!mqttClient.isConnected()) {
+                    connect();
+                }
+            }
+        }, 0 * 1000, 10 * 1000, TimeUnit.MILLISECONDS);
+    }
+
+    public static void connect() {
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    mqttClient.connect(options);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }
