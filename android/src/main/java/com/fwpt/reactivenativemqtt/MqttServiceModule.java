@@ -43,7 +43,7 @@ public class MqttServiceModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void connectAndReserve(String topicNames,String userId) {
 
-        new MQTTService(myContext,topicNames,userId).onStart();
+        MQTTService.onStart(myContext,topicNames,userId);
     }
 
     @ReactMethod

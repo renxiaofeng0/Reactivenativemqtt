@@ -1,4 +1,4 @@
-﻿package com.fwpt.reactivenativemqtt;
+package com.fwpt.reactivenativemqtt;
 
 import android.content.Intent;
 import android.os.IBinder;
@@ -31,27 +31,30 @@ public class MQTTService {
     //mqtt连接配置类
     private static MqttConnectOptions options;
 
-    private String userName = "admin";
-    private String passWord = "admin";
+    private static String userName = "admin";
+    private static String passWord = "admin";
 
     //定义上下文对象
     public static ReactContext myContext;
 
-    public MQTTService(ReactContext myContext, String topicNames, String userId)
-    {
-        topic = topicNames;
-        clientId = userId;
-        this.myContext = myContext;
-    }
+//    public MQTTService(ReactContext myContext, String topicNames, String userId)
+//    {
+//        topic = topicNames;
+//        clientId = userId;
+//        this.myContext = myContext;
+//    }
 
     public IBinder onBind(Intent intent) {
         return null;
     }
 
-    public void onStart() {
+    public static void onStart(ReactContext myContextTarget, String topicNames, String userId) {
 
         try {
                 if(mqttClient==null) {
+                    topic = topicNames;
+                    clientId = userId;
+                    myContext = myContextTarget;
                     mqttClient = new MqttClient(BROKER_URL, clientId, new MemoryPersistence());
                 }
                 if (!mqttClient.isConnected()) {
@@ -73,25 +76,24 @@ public class MQTTService {
                     options.setKeepAliveInterval(20);
                     // 设置回调  回调类的说明看后面
                     mqttClient.setCallback(new PushCallback(myContext));
-                    MqttTopic topic = mqttClient.getTopic(this.topic);
+                    MqttTopic mqttTopic = mqttClient.getTopic(topic);
                     //setWill方法，如果项目中需要知道客户端是否掉线可以调用该方法。设置最终端口的通知消息
-                    options.setWill(topic, "close".getBytes(), 2, true);
+//                    options.setWill(mqttTopic, "close".getBytes(), 2, true);
                     //mqtt客户端连接服务器
                     mqttClient.connect(options);
 //            options.setUserName("xuym");
-
                     //mqtt客户端订阅主题
                     //在mqtt中用QoS来标识服务质量
                     //QoS=0时，报文最多发送一次，有可能丢失
                     //QoS=1时，报文至少发送一次，有可能重复
                     //QoS=2时，报文只发送一次，并且确保消息只到达一次。
                     int[] Qos = {1};
-                    String[] topic1 = {this.topic};
+                    String[] topic1 = {topic};
                     mqttClient.subscribe(topic1, Qos);
 
                     //通知前端
                     WritableMap event = Arguments.createMap();
-                    event.putString("message", "{\"context\":\"已链接上消息服务器，监听主题：" + this.topic+"\"}");
+                    event.putString("message", "{\"context\":\"已链接上消息服务器，监听主题：" + topic+"\"}");
                     sendEvent(myContext, "MqttMsg", event);
                 } else {
                     mqttClient = null;
